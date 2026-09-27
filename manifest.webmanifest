@@ -1,0 +1,10 @@
+{
+  "name": "CRAFT AI Tutor",
+  "short_name": "CRAFT",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06100d",
+  "theme_color": "#071510",
+  "description": "CRAFT AI Tutor — concept-first learning in a living study world.",
+  "icons": []
+}
