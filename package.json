@@ -1,0 +1,19 @@
+{
+  "name": "craft-ai-tutor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CRAFT AI Tutor — concept-first learning in a living study world.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "openai": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
