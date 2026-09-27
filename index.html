@@ -1,83 +1,203 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#071510" />
-  <meta name="description" content="CRAFT AI Tutor — concept-first learning in a living study world." />
-  <title>CRAFT — AI Tutor</title>
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="stylesheet" href="/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRAFT AI - Grandmaster Tutor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gold: #0d0b08;
+            --card-bg: rgba(22, 18, 13, 0.85);
+            --border-gold: #c5a059;
+            --accent-red: #8b0000;
+            --text-gold: #e6c88b;
+            --text-light: #f0e6d2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-gold);
+            background-image: radial-gradient(circle at center, #1c150c 0%, #080604 100%);
+            color: var(--text-light);
+            font-family: 'Noto Serif', serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .wuxia-container {
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            background: var(--card-bg);
+            border: 2px solid var(--border-gold);
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.2), inset 0 0 15px rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .wuxia-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border-gold);
+            background: linear-gradient(180deg, rgba(139, 0, 0, 0.3) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .wuxia-header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--text-gold);
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
+        }
+
+        .wuxia-header p {
+            font-size: 0.9rem;
+            color: #a3937b;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 6px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .user-msg {
+            align-self: flex-end;
+            background: rgba(139, 0, 0, 0.4);
+            border: 1px solid #a83232;
+            color: #f7e8e8;
+        }
+
+        .ai-msg {
+            align-self: flex-start;
+            background: rgba(30, 25, 18, 0.9);
+            border: 1px solid var(--border-gold);
+            color: var(--text-gold);
+        }
+
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid var(--border-gold);
+            display: flex;
+            gap: 10px;
+            background: rgba(10, 8, 5, 0.9);
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: rgba(20, 16, 11, 0.8);
+            border: 1px solid var(--border-gold);
+            border-radius: 4px;
+            padding: 12px 15px;
+            color: var(--text-light);
+            font-family: 'Noto Serif', serif;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 8px rgba(197, 160, 89, 0.6);
+        }
+
+        button {
+            background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
+            border: 1px solid var(--border-gold);
+            color: var(--text-gold);
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            padding: 0 25px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #a80000 0%, #600000 100%);
+            box-shadow: 0 0 12px rgba(139, 0, 0, 0.8);
+        }
+    </style>
 </head>
 <body>
-  <div class="world" aria-hidden="true">
-    <div class="moon"></div>
-    <div class="mountain mountain-a"></div>
-    <div class="mountain mountain-b"></div>
-    <div class="mist mist-a"></div>
-    <div class="mist mist-b"></div>
-    <div class="river"></div>
-    <div class="bamboo bamboo-left"><span></span><span></span><span></span></div>
-    <div class="bamboo bamboo-right"><span></span><span></span><span></span></div>
-    <div class="petals"><i></i><i></i><i></i><i></i><i></i></div>
-  </div>
 
-  <main class="app-shell">
-    <aside class="sidebar" id="sidebar">
-      <div class="brand">
-        <div class="brand-mark">C</div>
-        <div>
-          <strong>CRAFT</strong>
-          <small>Concept & Recall Adaptive Foundation Tutor</small>
+    <div class="wuxia-container">
+        <div class="wuxia-header">
+            <h1>CRAFT AI TUTOR</h1>
+            <p>Martial Arts Knowledge Realm • Grandmaster Guidance</p>
         </div>
-      </div>
-      <button class="new-chat" id="newChat">＋ New learning session</button>
-      <div class="side-section">
-        <span>CRAFT pathway</span>
-        <button>Concept Lock</button>
-        <button>Step-by-Step</button>
-        <button>Pattern & Compare</button>
-        <button>Active Recall</button>
-        <button>Apply & Transfer</button>
-      </div>
-      <div class="side-footer">Foundation build · AI connected through the secure server</div>
-    </aside>
 
-    <section class="chat-panel">
-      <header class="topbar">
-        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
-        <div>
-          <div class="eyebrow">LIVING STUDY WORLD</div>
-          <h1>Learn the idea. Lock the idea.</h1>
+        <div class="chat-box" id="chatBox">
+            <div class="message ai-msg">
+                Greetings, Scholar! Enter your query to unlock the secrets of knowledge.
+            </div>
         </div>
-        <div class="status-pill" id="statusPill">Checking AI…</div>
-      </header>
 
-      <section class="welcome" id="welcome">
-        <div class="welcome-glow"></div>
-        <p class="eyebrow">CRAFT CORE</p>
-        <h2>What are we learning today?</h2>
-        <p>Start from zero. Build the concept. Then turn it into recall, numericals, reactions, comparisons, and exam speed.</p>
-        <div class="prompt-grid">
-          <button data-prompt="Teach me magnetic flux density B from absolute zero using the CRAFT method.">Teach me magnetic flux density from zero</button>
-          <button data-prompt="Teach me Cr and Cu electronic configuration anomalies with an easy analogy and then the formal explanation.">Explain a chemistry anomaly</button>
-          <button data-prompt="Give me a step-by-step numerical on force on a current-carrying conductor.">Practice a physics numerical</button>
-          <button data-prompt="Test my understanding with active recall after teaching me Gauss's law.">Teach + test me</button>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Seek wisdom from the Grandmaster..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">SEEK</button>
         </div>
-      </section>
+    </div>
 
-      <section class="messages" id="messages" aria-live="polite"></section>
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const text = input.value.trim();
 
-      <form class="composer" id="chatForm">
-        <textarea id="messageInput" rows="1" placeholder="Ask CRAFT anything… e.g. 'Current kya hota hai? Start from zero.'" autocomplete="off"></textarea>
-        <div class="composer-row">
-          <div class="hint">Enter = send · Shift+Enter = new line</div>
-          <button type="submit" id="sendBtn">Send ↗</button>
-        </div>
-      </form>
-    </section>
-  </main>
+            if (!text) return;
 
-  <script src="/app.js"></script>
+            // Render User Message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-msg';
+            userDiv.innerText = text;
+            chatBox.appendChild(userDiv);
+
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Render Temporary AI Loading
+            const aiDiv = document.createElement('div');
+            aiDiv.className = 'message ai-msg';
+            aiDiv.innerText = 'Consulting the ancient scrolls...';
+            chatBox.appendChild(aiDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                aiDiv.innerText = data.reply || "Forgive me, the scrolls are currently unreachable.";
+            } catch (err) {
+                aiDiv.innerText = "Error connecting to the Grandmaster.";
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
 </body>
 </html>
