@@ -1,14 +1,16 @@
 {
   "name": "craft-ai-tutor",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "Wuxia Inspired Clean AI Tutor App",
   "type": "module",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "dotenv": "^16.4.5",
-    "openai": "^4.28.0"
+    "@google/generative-ai": "^0.21.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "openai": "^4.83.0"
   }
 }
