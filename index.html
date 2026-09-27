@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRAFT AI - Grandmaster Tutor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <title>CRAFT AI - VIP Wuxia Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* Premium Wuxia Color Palette */
         :root {
-            --bg-gold: #0d0b08;
-            --card-bg: rgba(22, 18, 13, 0.85);
-            --border-gold: #c5a059;
-            --accent-red: #8b0000;
-            --text-gold: #e6c88b;
-            --text-light: #f0e6d2;
+            --bg-deep: #050505;
+            --bg-chat: #0a0a0c;
+            --gold-accent: #d4af37;
+            --gold-dim: #8c7326;
+            --red-wuxia: #8b0000;
+            --text-main: #e2dcd0;
+            --text-muted: #888378;
+            --msg-user: #141416;
+            --msg-ai: #0a0a0c;
         }
 
         * {
@@ -22,179 +26,343 @@
         }
 
         body {
-            background-color: var(--bg-gold);
-            background-image: radial-gradient(circle at center, #1c150c 0%, #080604 100%);
-            color: var(--text-light);
-            font-family: 'Noto Serif', serif;
-            min-height: 100vh;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif; /* Clean ChatGPT-like font */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Qi Particles Background */
+        #particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* Top Navigation Bar - ChatGPT Style but Wuxia */
+        .top-bar {
+            position: relative;
+            z-index: 10;
+            height: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-        }
-
-        .wuxia-container {
-            width: 100%;
-            max-width: 900px;
-            height: 90vh;
-            background: var(--card-bg);
-            border: 2px solid var(--border-gold);
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.2), inset 0 0 15px rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            background: rgba(5, 5, 5, 0.8);
             backdrop-filter: blur(10px);
         }
 
-        .wuxia-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 2px solid var(--border-gold);
-            background: linear-gradient(180deg, rgba(139, 0, 0, 0.3) 0%, rgba(0,0,0,0) 100%);
-        }
-
-        .wuxia-header h1 {
+        /* 3 AI Selector Dropdown */
+        .ai-selector {
+            background: transparent;
+            color: var(--gold-accent);
+            border: 1px solid var(--gold-dim);
+            padding: 8px 16px;
+            border-radius: 8px;
             font-family: 'Cinzel', serif;
-            font-size: 2rem;
-            color: var(--text-gold);
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
-        }
-
-        .wuxia-header p {
-            font-size: 0.9rem;
-            color: #a3937b;
-            font-style: italic;
-            margin-top: 5px;
-        }
-
-        .chat-box {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 6px;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .user-msg {
-            align-self: flex-end;
-            background: rgba(139, 0, 0, 0.4);
-            border: 1px solid #a83232;
-            color: #f7e8e8;
-        }
-
-        .ai-msg {
-            align-self: flex-start;
-            background: rgba(30, 25, 18, 0.9);
-            border: 1px solid var(--border-gold);
-            color: var(--text-gold);
-        }
-
-        .input-area {
-            padding: 15px;
-            border-top: 1px solid var(--border-gold);
-            display: flex;
-            gap: 10px;
-            background: rgba(10, 8, 5, 0.9);
-        }
-
-        input[type="text"] {
-            flex: 1;
-            background: rgba(20, 16, 11, 0.8);
-            border: 1px solid var(--border-gold);
-            border-radius: 4px;
-            padding: 12px 15px;
-            color: var(--text-light);
-            font-family: 'Noto Serif', serif;
-            outline: none;
-        }
-
-        input[type="text"]:focus {
-            box-shadow: 0 0 8px rgba(197, 160, 89, 0.6);
-        }
-
-        button {
-            background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
-            border: 1px solid var(--border-gold);
-            color: var(--text-gold);
-            font-family: 'Cinzel', serif;
+            font-size: 1rem;
             font-weight: bold;
-            padding: 0 25px;
+            outline: none;
             cursor: pointer;
-            border-radius: 4px;
+            appearance: none;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
             transition: all 0.3s ease;
         }
 
-        button:hover {
-            background: linear-gradient(135deg, #a80000 0%, #600000 100%);
-            box-shadow: 0 0 12px rgba(139, 0, 0, 0.8);
+        .ai-selector:hover {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            border-color: var(--gold-accent);
         }
+
+        .ai-selector option {
+            background: var(--bg-deep);
+            color: var(--gold-accent);
+        }
+
+        /* Chat Container - Clean & Centered */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            z-index: 5;
+            padding-bottom: 120px; /* Space for input */
+            scroll-behavior: smooth;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--gold-dim);
+            border-radius: 10px;
+        }
+
+        /* Message Layout (ChatGPT Style) */
+        .message-wrapper {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .message-wrapper.ai { background-color: var(--msg-ai); }
+        .message-wrapper.user { background-color: var(--msg-user); }
+
+        .message-content {
+            max-width: 750px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Avatars */
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+
+        .user-avatar {
+            background: var(--red-wuxia);
+            color: white;
+            border: 1px solid #ff4d4d;
+        }
+
+        .ai-avatar {
+            background: linear-gradient(135deg, #d4af37, #8c7326);
+            color: black;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+        }
+
+        .text {
+            flex: 1;
+            color: var(--text-main);
+            padding-top: 4px;
+        }
+
+        /* Input Area - Centered at bottom */
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 20px;
+            background: linear-gradient(0deg, var(--bg-deep) 60%, transparent 100%);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+        }
+
+        .input-box {
+            max-width: 750px;
+            width: 100%;
+            position: relative;
+            background: #1a1a1e;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: border-color 0.3s ease;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .input-box input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 16px 50px 16px 20px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .send-btn {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            background: var(--gold-accent);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #f1c40f;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px var(--gold-accent);
+        }
+
+        .send-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: black;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="wuxia-container">
-        <div class="wuxia-header">
-            <h1>CRAFT AI TUTOR</h1>
-            <p>Martial Arts Knowledge Realm • Grandmaster Guidance</p>
-        </div>
+    <!-- Animated Glowing Particles (Qi) -->
+    <canvas id="particles"></canvas>
 
-        <div class="chat-box" id="chatBox">
-            <div class="message ai-msg">
-                Greetings, Scholar! Enter your query to unlock the secrets of knowledge.
+    <!-- Header with 3 AI Model Selector -->
+    <div class="top-bar">
+        <select class="ai-selector" id="aiModelSelector">
+            <option value="grandmaster">✦ Grandmaster AI (Deep Wisdom) ✦</option>
+            <option value="scholar">✦ Scholar AI (Quick Speed) ✦</option>
+            <option value="warrior">✦ Warrior AI (Direct Answers) ✦</option>
+        </select>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-container" id="chatBox">
+        <!-- Initial Welcome Message -->
+        <div class="message-wrapper ai">
+            <div class="message-content">
+                <div class="avatar ai-avatar">☯</div>
+                <div class="text">
+                    Greetings. The scrolls are open. Which technique or knowledge do you seek today?
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Seek wisdom from the Grandmaster..." onkeydown="if(event.key==='Enter') sendMessage()">
-            <button onclick="sendMessage()">SEEK</button>
+    <!-- ChatGPT Style Input Area -->
+    <div class="input-container">
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="Message CRAFT AI..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+            </button>
         </div>
     </div>
 
     <script>
+        // --- Spiritual Qi Particles Animation (Wuxia Feel) ---
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = (Math.random() * 1) - 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.y -= this.speedY;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        function initParticles() {
+            for (let i = 0; i < 50; i++) particlesArray.push(new Particle());
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // --- Chat Logic ---
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const chatBox = document.getElementById('chatBox');
             const text = input.value.trim();
+            const selectedAI = document.getElementById('aiModelSelector').value; // Reads the 3 AI option
 
             if (!text) return;
 
-            // Render User Message
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message user-msg';
-            userDiv.innerText = text;
-            chatBox.appendChild(userDiv);
-
+            // 1. Add User Message
+            const userHTML = `
+                <div class="message-wrapper user">
+                    <div class="message-content">
+                        <div class="avatar user-avatar">You</div>
+                        <div class="text">${text}</div>
+                    </div>
+                </div>`;
+            chatBox.insertAdjacentHTML('beforeend', userHTML);
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Render Temporary AI Loading
-            const aiDiv = document.createElement('div');
-            aiDiv.className = 'message ai-msg';
-            aiDiv.innerText = 'Consulting the ancient scrolls...';
-            chatBox.appendChild(aiDiv);
+            // 2. Add Loading Message
+            const loadingId = 'loading-' + Date.now();
+            const aiHTML = `
+                <div class="message-wrapper ai" id="${loadingId}">
+                    <div class="message-content">
+                        <div class="avatar ai-avatar">☯</div>
+                        <div class="text" style="color: var(--gold-dim);">Cultivating response...</div>
+                    </div>
+                </div>`;
+            chatBox.insertAdjacentHTML('beforeend', aiHTML);
             chatBox.scrollTop = chatBox.scrollHeight;
 
+            // 3. Fetch from your Server
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
+                    body: JSON.stringify({ message: text, model: selectedAI }) // Sending selected model info
                 });
                 const data = await response.json();
-                aiDiv.innerText = data.reply || "Forgive me, the scrolls are currently unreachable.";
+                
+                // Replace loading text with actual clean response
+                document.getElementById(loadingId).querySelector('.text').innerHTML = data.reply || "Connection to the spiritual realm lost.";
+                document.getElementById(loadingId).querySelector('.text').style.color = "var(--text-main)";
             } catch (err) {
-                aiDiv.innerText = "Error connecting to the Grandmaster.";
+                document.getElementById(loadingId).querySelector('.text').innerHTML = "Error connecting to the server.";
+                document.getElementById(loadingId).querySelector('.text').style.color = "var(--red-wuxia)";
             }
             chatBox.scrollTop = chatBox.scrollHeight;
         }
