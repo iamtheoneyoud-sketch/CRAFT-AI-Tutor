@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071510" />
+  <meta name="description" content="CRAFT AI Tutor — concept-first learning in a living study world." />
+  <title>CRAFT — AI Tutor</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="world" aria-hidden="true">
+    <div class="moon"></div>
+    <div class="mountain mountain-a"></div>
+    <div class="mountain mountain-b"></div>
+    <div class="mist mist-a"></div>
+    <div class="mist mist-b"></div>
+    <div class="river"></div>
+    <div class="bamboo bamboo-left"><span></span><span></span><span></span></div>
+    <div class="bamboo bamboo-right"><span></span><span></span><span></span></div>
+    <div class="petals"><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+
+  <main class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <div>
+          <strong>CRAFT</strong>
+          <small>Concept & Recall Adaptive Foundation Tutor</small>
+        </div>
+      </div>
+      <button class="new-chat" id="newChat">＋ New learning session</button>
+      <div class="side-section">
+        <span>CRAFT pathway</span>
+        <button>Concept Lock</button>
+        <button>Step-by-Step</button>
+        <button>Pattern & Compare</button>
+        <button>Active Recall</button>
+        <button>Apply & Transfer</button>
+      </div>
+      <div class="side-footer">Foundation build · AI connected through the secure server</div>
+    </aside>
+
+    <section class="chat-panel">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <div>
+          <div class="eyebrow">LIVING STUDY WORLD</div>
+          <h1>Learn the idea. Lock the idea.</h1>
+        </div>
+        <div class="status-pill" id="statusPill">Checking AI…</div>
+      </header>
+
+      <section class="welcome" id="welcome">
+        <div class="welcome-glow"></div>
+        <p class="eyebrow">CRAFT CORE</p>
+        <h2>What are we learning today?</h2>
+        <p>Start from zero. Build the concept. Then turn it into recall, numericals, reactions, comparisons, and exam speed.</p>
+        <div class="prompt-grid">
+          <button data-prompt="Teach me magnetic flux density B from absolute zero using the CRAFT method.">Teach me magnetic flux density from zero</button>
+          <button data-prompt="Teach me Cr and Cu electronic configuration anomalies with an easy analogy and then the formal explanation.">Explain a chemistry anomaly</button>
+          <button data-prompt="Give me a step-by-step numerical on force on a current-carrying conductor.">Practice a physics numerical</button>
+          <button data-prompt="Test my understanding with active recall after teaching me Gauss's law.">Teach + test me</button>
+        </div>
+      </section>
+
+      <section class="messages" id="messages" aria-live="polite"></section>
+
+      <form class="composer" id="chatForm">
+        <textarea id="messageInput" rows="1" placeholder="Ask CRAFT anything… e.g. 'Current kya hota hai? Start from zero.'" autocomplete="off"></textarea>
+        <div class="composer-row">
+          <div class="hint">Enter = send · Shift+Enter = new line</div>
+          <button type="submit" id="sendBtn">Send ↗</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
