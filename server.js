@@ -7,48 +7,58 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Initialize Gemini with API Key from environment variables
+// Initialize Google Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Initialize OpenAI with API Key from environment variables
+// Initialize OpenAI API
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, provider } = req.body; // provider can be 'gemini' or 'openai'
+    const { message, provider } = req.body;
 
-    if (provider === 'gemini') {
-      if (!process.env.GEMINI_API_KEY) {
-        return res.status(400).json({ error: "Spiritual qi flow is currently blocked: Gemini API key missing." });
-      }
-      // Gemini 2.0 Flash model
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-      const result = await model.generateContent(message);
-      const response = await result.response;
-      const text = response.text();
-      return res.json({ reply: text });
-      
-    } else {
-      if (!process.env.OPENAI_API_KEY) {
-        return res.status(400).json({ error: "Spiritual qi flow is currently blocked: OpenAI API key missing." });
-      }
-      // OpenAI o4-mini model
-      const completion = await openai.chat.completions.create({
-        model: "o4-mini-2025-04-16",
-        messages: [{ role: "user", content: message }],
-      });
-      const text = completion.choices[0].message.content;
-      return res.json({ reply: text });
+    if (!message) {
+      return res.status(400).json({ error: "Message khali nahi ho sakta, guru!" });
     }
-  } catch (error) {
-    console.error("API Error:", error);
-    res.status(500).json({ error: "Spiritual qi flow is currently blocked: " + error.message });
+
+    // OpenAI Provider Handler
+    if (provider === 'openai') {
+      try {
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4o-mini", // Valid and stable OpenAI model
+          messages: [{ role: "user", content: message }],
+        });
+        const reply = completion.choices[0].message.content;
+        return res.json({ reply });
+      } catch (openaiErr) {
+        console.error("OpenAI API Error:", openaiErr);
+        return res.status(500).json({ error: "OpenAI Qi Blocked: " + openaiErr.message });
+      }
+    } 
+    
+    // Default: Google Gemini Provider Handler
+    else {
+      try {
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        const result = await model.generateContent(message);
+        const response = await result.response;
+        const reply = response.text();
+        return res.json({ reply });
+      } catch (geminiErr) {
+        console.error("Gemini API Error:", geminiErr);
+        return res.status(500).json({ error: "Gemini Qi Blocked: " + geminiErr.message });
+      }
+    }
+
+  } catch (err) {
+    console.error("Server Execution Error:", err);
+    res.status(500).json({ error: "Internal Server Error: " + err.message });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`CRAFT Tutor backend is running on port ${PORT} with full Wuxia power!`);
 });
