@@ -1,495 +1,284 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#071418">
-  <meta name="color-scheme" content="dark">
-  <title>CRAFT AI Tutor — Wuxia Learning Realm</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRAFT AI - Wuxia Realm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Wuxia Mystical Atmosphere Background */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030712; /* Deep dark blue/black base */
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 50%), /* Cherry Blossom Pink Glow */
+                radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),   /* Waterfall Cyan Glow */
+                radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.1) 0%, transparent 70%);    /* Deep Mountain Blue */
+            color: #e2e8f0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-  <style>
-    :root {
-      --ink: #f4f0e6;
-      --ink-soft: rgba(244,240,230,.72);
-      --ink-faint: rgba(244,240,230,.48);
-      --jade: #93d8c0;
-      --jade-bright: #b8f0dc;
-      --cyan: #77dce2;
-      --gold: #c5a059;
-      --gold-bright: #e4cb90;
-      --deep: #030a0d;
-      --line: rgba(197,160,89,.28);
-      --line-soft: rgba(220,244,236,.12);
-      --danger: #e7a4a4;
-      --shadow: 0 28px 90px rgba(0,0,0,.42);
-      --radius-xl: 30px;
-    }
+        /* Floating Qi/Energy Particles Container */
+        #particles-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    * { box-sizing: border-box; }
-    html, body { width:100%; height:100%; margin:0; }
-    body {
-      min-height: 100%;
-      overflow: hidden;
-      color: var(--ink);
-      background: var(--deep);
-      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-    }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            animation: floatUp infinite linear;
+            opacity: 0;
+        }
 
-    /* Background World */
-    .world {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      background: #02070a;
-      z-index: 0;
-    }
-    .world-canvas {
-      position: absolute;
-      inset: -3%;
-      width: 106%;
-      height: 106%;
-      z-index: 0;
-    }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
 
-    /* Shell Layout */
-    .shell {
-      position: relative;
-      z-index: 10;
-      display: grid;
-      grid-template-columns: 276px minmax(0,1fr);
-      gap: 14px;
-      width: 100%;
-      height: 100%;
-      padding: 14px;
-    }
+        /* Premium Glassmorphism Panel */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(6, 182, 212, 0.05);
+            z-index: 10;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+        }
+        
+        .glass-panel:hover {
+            box-shadow: 0 40px 70px -15px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(236, 72, 153, 0.05);
+        }
 
-    .glass {
-      background: linear-gradient(180deg, rgba(7,20,23,.75), rgba(3,12,15,.85));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(20px);
-    }
+        /* Silky Smooth Message Animations */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      border-radius: var(--radius-xl);
-      padding: 18px;
-    }
+        .message-enter {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 4px 4px 16px;
-    }
+        /* Smooth Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.5); }
 
-    .brand-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      color: var(--gold-bright);
-      border: 1px solid rgba(197,160,89,.46);
-      background: linear-gradient(145deg, rgba(197,160,89,.18), rgba(86,145,132,.10));
-      font-family: Georgia, serif;
-      font-size: 20px;
-    }
+        /* Glowing Inputs & Buttons */
+        .input-glow {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25), inset 0 0 10px rgba(6, 182, 212, 0.1);
+            border-color: rgba(6, 182, 212, 0.6);
+            background: rgba(15, 23, 42, 0.8);
+        }
 
-    .brand h1 {
-      margin: 0;
-      font-size: 15px;
-      letter-spacing: .16em;
-      font-family: Georgia, serif;
-    }
-
-    .brand p {
-      margin: 4px 0 0;
-      color: var(--ink-faint);
-      font-size: 11px;
-    }
-
-    .side-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(197,160,89,.34), transparent);
-      margin: 4px 0 14px;
-    }
-
-    .new-chat {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid rgba(197,160,89,.34);
-      border-radius: 15px;
-      padding: 11px 13px;
-      background: rgba(197,160,89,.1);
-      cursor: pointer;
-      color: var(--ink);
-    }
-
-    .side-title {
-      margin: 20px 4px 8px;
-      color: var(--ink-faint);
-      font-size: 10px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-
-    .realm-list {
-      display: grid;
-      gap: 7px;
-    }
-
-    .realm-btn {
-      border: 1px solid transparent;
-      background: rgba(255,255,255,.025);
-      padding: 10px 11px;
-      border-radius: 13px;
-      text-align: left;
-      cursor: pointer;
-      color: rgba(244,240,230,.72);
-    }
-    .realm-btn.active {
-      background: rgba(119,220,226,.075);
-      border-color: rgba(119,220,226,.18);
-      color: var(--ink);
-    }
-
-    /* Main Chat Area */
-    .main {
-      display: flex;
-      flex-direction: column;
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 17px;
-      border-bottom: 1px solid var(--line-soft);
-      background: rgba(4,15,18,.6);
-    }
-
-    .status-orb {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--jade-bright);
-      box-shadow: 0 0 18px rgba(184,240,220,.64);
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .realm-heading h2 {
-      margin: 0;
-      font-size: 14px;
-    }
-    .realm-heading span {
-      font-size: 10px;
-      color: var(--ink-faint);
-    }
-
-    .ai-select {
-      border: 1px solid rgba(197,160,89,.30);
-      border-radius: 12px;
-      color: var(--gold-bright);
-      background: rgba(4,14,17,.8);
-      padding: 9px 12px;
-      outline: none;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .ai-select option { background: #081116; color: #f2ead9; }
-
-    .chat-scroll {
-      flex: 1;
-      overflow: auto;
-      padding: 26px clamp(12px, 4vw, 54px);
-    }
-
-    .welcome {
-      max-width: 800px;
-      margin: 4vh auto 20px;
-      text-align: center;
-      padding: 24px;
-      border-radius: 24px;
-      border: 1px solid rgba(197,160,89,.25);
-      background: rgba(4,13,17,.5);
-    }
-    .welcome h3 {
-      font-family: Georgia, serif;
-      font-size: 28px;
-      margin: 10px 0;
-    }
-    .welcome p { color: var(--ink-soft); font-size: 13px; }
-
-    .messages {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .message {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .message.user { flex-direction: row-reverse; }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(197,160,89,.3);
-      background: #061114;
-      color: var(--gold-bright);
-    }
-
-    .message-text {
-      padding: 12px 16px;
-      border-radius: 14px;
-      background: rgba(3,11,14,.6);
-      border: 1px solid rgba(197,160,89,.2);
-      max-width: 75%;
-      line-height: 1.6;
-      font-size: 14px;
-      white-space: pre-wrap;
-    }
-    .message.user .message-text {
-      background: rgba(239,156,199,.12);
-      border-color: rgba(239,156,199,.2);
-    }
-
-    /* Composer */
-    .composer-wrap {
-      padding: 12px clamp(12px, 4vw, 54px);
-      background: rgba(3,11,14,.6);
-    }
-    .composer {
-      max-width: 900px;
-      margin: 0 auto;
-      border-radius: 16px;
-      border: 1px solid rgba(197,160,89,.3);
-      background: rgba(8,18,21,.8);
-      display: flex;
-      flex-direction: column;
-    }
-    .composer textarea {
-      width: 100%;
-      min-height: 50px;
-      max-height: 150px;
-      resize: none;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: var(--ink);
-      padding: 14px;
-      font-size: 14px;
-    }
-    .composer-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 12px 10px;
-    }
-    .send-btn {
-      border: 1px solid rgba(197,160,89,.4);
-      border-radius: 10px;
-      padding: 8px 16px;
-      cursor: pointer;
-      color: #09100f;
-      font-weight: 800;
-      background: linear-gradient(145deg, #e5cf95, #b68c3f);
-    }
-
-    @media (max-width: 768px) {
-      .shell { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-    }
-  </style>
+        .btn-glow {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.4);
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body>
+<body class="p-4 md:p-8">
 
-  <div class="world">
-    <canvas class="world-canvas" id="bgCanvas"></canvas>
-  </div>
+    <!-- Background Animated Particles -->
+    <div id="particles-container"></div>
 
-  <div class="shell">
-    <aside class="sidebar glass">
-      <div class="brand">
-        <div class="brand-mark">武</div>
-        <div>
-          <h1>CRAFT AI</h1>
-          <p>Wuxia Learning Realm</p>
+    <!-- Main Chat Container -->
+    <div class="glass-panel w-full max-w-2xl h-[90vh] rounded-[2rem] flex flex-col relative overflow-hidden">
+        
+        <!-- Header with Model Selector -->
+        <header class="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02] z-10">
+            <div>
+                <h1 class="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 tracking-wide drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                    CRAFT AI 
+                </h1>
+                <p class="text-[10px] text-cyan-200/50 mt-1 uppercase tracking-[0.2em]">Neural Realm Connection</p>
+            </div>
+            
+            <!-- AI Engine Switcher -->
+            <div class="flex items-center gap-4">
+                <select id="ai-model" class="bg-slate-900/60 border border-white/10 text-cyan-100 text-xs rounded-xl px-4 py-2 focus:outline-none focus:border-cyan-500/50 backdrop-blur-md cursor-pointer transition-all hover:border-white/20">
+                    <option value="openai">OpenAI Engine</option>
+                    <option value="gemini">Gemini Engine</option>
+                </select>
+                <div class="flex items-center gap-2 px-3 py-2 rounded-full bg-slate-900/50 border border-white/5">
+                    <div class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Area -->
+        <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-6 z-10 scroll-smooth">
+            <div class="flex justify-start message-enter">
+                <div class="max-w-[80%] bg-slate-800/40 border border-white/5 rounded-2xl rounded-tl-sm px-6 py-4 shadow-xl backdrop-blur-md relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-pink-500"></div>
+                    <p class="text-sm text-slate-200 leading-relaxed font-light">
+                        System initialized. The connection to the AI realm is stable. Select your engine and enter your query below.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="side-divider"></div>
-      <button class="new-chat" id="newChatBtn">
-        <span>+ New Dao Path</span>
-      </button>
-      <div class="side-title">Realms of Study</div>
-      <div class="realm-list">
-        <button class="realm-btn active">📜 Concept Mastery</button>
-        <button class="realm-btn">🗡 Active Recall</button>
-        <button class="realm-btn">☯ Problem Solving</button>
-      </div>
-    </aside>
 
-    <main class="main glass">
-      <header class="topbar">
-        <div class="topbar-left">
-          <div class="status-orb"></div>
-          <div class="realm-heading">
-            <h2>Concept Mastery Realm</h2>
-            <span>Dual AI Engine Connected</span>
-          </div>
+        <!-- Input Area -->
+        <div class="p-5 border-t border-white/5 bg-slate-950/40 z-10 backdrop-blur-xl">
+            <form id="chat-form" class="relative flex items-center">
+                <input 
+                    type="text" 
+                    id="user-input"
+                    class="w-full bg-slate-900/40 border border-white/10 text-white text-sm rounded-2xl px-6 py-4 focus:outline-none input-glow placeholder-slate-500"
+                    placeholder="Focus your intent..."
+                    autocomplete="off"
+                >
+                <button 
+                    type="submit"
+                    class="btn-glow absolute right-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-xl px-5 py-2.5 text-sm font-medium flex items-center gap-2"
+                >
+                    <span class="tracking-wide">Send</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </form>
         </div>
-        <div class="controls">
-          <select class="ai-select" id="personaSelect">
-            <option value="grandmaster">⛩ Grandmaster AI</option>
-            <option value="scholar">📜 Scholar AI</option>
-            <option value="warrior">⚔ Warrior AI</option>
-          </select>
-        </div>
-      </header>
+    </div>
 
-      <div class="chat-scroll" id="chatScroll">
-        <div class="welcome" id="welcomeBox">
-          <h3>Welcome to CRAFT Wuxia Realm</h3>
-          <p>Ask any complex topic or concept. Your AI guide is ready.</p>
-        </div>
-        <div class="messages" id="messagesContainer"></div>
-      </div>
+    <script>
+        // --- 1. Background Particles Logic ---
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 20; // Number of floating lights/petals
+            
+            for (let i = 0; i < particleCount; i++) {
+                let particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Randomize size, position, color (cyan or pink), and speed
+                let size = Math.random() * 6 + 2; 
+                let posX = Math.random() * 100;
+                let duration = Math.random() * 10 + 10;
+                let delay = Math.random() * 10;
+                let isPink = Math.random() > 0.7;
+                
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = posX + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                
+                if(isPink) {
+                    particle.style.background = 'radial-gradient(circle, rgba(236,72,153,0.8) 0%, rgba(236,72,153,0) 70%)';
+                } else {
+                    particle.style.background = 'radial-gradient(circle, rgba(6,182,212,0.8) 0%, rgba(6,182,212,0) 70%)';
+                }
+                
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
 
-      <div class="composer-wrap">
-        <div class="composer">
-          <textarea id="messageInput" placeholder="Ask your question here..." rows="1"></textarea>
-          <div class="composer-bar">
-            <span style="font-size: 10px; color: var(--ink-faint);">Press Enter to send</span>
-            <button class="send-btn" id="sendBtn">Send ⚔</button>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
+        // --- 2. Chat UI & API Logic ---
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+        const modelSelect = document.getElementById('ai-model');
 
-  <script>
-    // Canvas Background Particles
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, particles = [];
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            const selectedModel = modelSelect.value;
+            
+            if (!message) return;
 
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
+            addMessage(message, 'user');
+            userInput.value = '';
 
-    for (let i = 0; i < 40; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        r: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.5 + 0.2,
-        speed: Math.random() * 0.2 + 0.05
-      });
-    }
+            const loadingId = addLoadingMessage();
 
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => {
-        p.y -= p.speed;
-        if (p.y < 0) p.y = height;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(184, 240, 220, ${p.alpha})`;
-        ctx.fill();
-      });
-      requestAnimationFrame(animate);
-    }
-    animate();
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: message, engine: selectedModel })
+                });
 
-    // Chat Logic
-    const messagesContainer = document.getElementById('messagesContainer');
-    const welcomeBox = document.getElementById('welcomeBox');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const personaSelect = document.getElementById('personaSelect');
-    const chatScroll = document.getElementById('chatScroll');
+                const data = await response.json();
+                removeMessage(loadingId);
 
-    function appendMessage(role, text) {
-      if (welcomeBox) welcomeBox.style.display = 'none';
-      const msg = document.createElement('div');
-      msg.className = `message ${role === 'user' ? 'user' : 'assistant'}`;
-      
-      const avatar = document.createElement('div');
-      avatar.className = 'avatar';
-      avatar.textContent = role === 'user' ? '👤' : '☯';
-
-      const txt = document.createElement('div');
-      txt.className = 'message-text';
-      txt.textContent = text;
-
-      if (role === 'user') {
-        msg.appendChild(txt);
-        msg.appendChild(avatar);
-      } else {
-        msg.appendChild(avatar);
-        msg.appendChild(txt);
-      }
-      messagesContainer.appendChild(msg);
-      chatScroll.scrollTop = chatScroll.scrollHeight;
-    }
-
-    async function handleSend() {
-      const text = messageInput.value.trim();
-      if (!text) return;
-      messageInput.value = '';
-      appendMessage('user', text);
-
-      sendBtn.disabled = true;
-      sendBtn.textContent = '...';
-
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text, model: personaSelect.value })
+                if (response.ok) {
+                    addMessage(data.reply || data.message, 'ai');
+                } else {
+                    addMessage(data.error || "Server processing error. Check backend logs.", 'error');
+                }
+            } catch (error) {
+                removeMessage(loadingId);
+                addMessage("Connection Interrupted: The neural link to the backend server failed. Ensure your Render backend is active.", 'error');
+            }
         });
-        const data = await res.json();
-        appendMessage('assistant', data.reply || 'Qi error occurred.');
-      } catch (err) {
-        appendMessage('assistant', 'Server connection failed.');
-      } finally {
-        sendBtn.disabled = false;
-        sendBtn.textContent = 'Send ⚔';
-      }
-    }
 
-    sendBtn.addEventListener('click', handleSend);
-    messageInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    });
+        function addMessage(text, sender) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} message-enter mb-6`;
+            
+            if (sender === 'user') {
+                wrapper.innerHTML = `
+                    <div class="max-w-[80%] bg-gradient-to-br from-cyan-700/30 to-blue-900/30 border border-cyan-400/20 rounded-2xl rounded-tr-sm px-6 py-4 shadow-[0_10px_25px_-5px_rgba(6,182,212,0.15)] backdrop-blur-md">
+                        <p class="text-sm text-cyan-50 leading-relaxed font-light">${text}</p>
+                    </div>`;
+            } else if (sender === 'error') {
+                wrapper.innerHTML = `
+                    <div class="max-w-[80%] bg-pink-900/20 border border-pink-500/20 rounded-2xl rounded-tl-sm px-6 py-4 shadow-xl backdrop-blur-md">
+                        <p class="text-sm text-pink-200 leading-relaxed font-light">${text}</p>
+                    </div>`;
+            } else {
+                wrapper.innerHTML = `
+                    <div class="max-w-[80%] bg-slate-800/40 border border-white/5 rounded-2xl rounded-tl-sm px-6 py-4 shadow-xl backdrop-blur-md relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-pink-500"></div>
+                        <p class="text-sm text-slate-200 leading-relaxed font-light">${text}</p>
+                    </div>`;
+            }
 
-    document.getElementById('newChatBtn').addEventListener('click', () => {
-      messagesContainer.innerHTML = '';
-      if (welcomeBox) welcomeBox.style.display = 'block';
-    });
-  </script>
+            chatBox.appendChild(wrapper);
+            chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+        }
+
+        function addLoadingMessage() {
+            const id = 'loading-' + Date.now();
+            const wrapper = document.createElement('div');
+            wrapper.id = id;
+            wrapper.className = `flex justify-start message-enter mb-6`;
+            wrapper.innerHTML = `
+                <div class="bg-slate-800/40 border border-white/5 rounded-2xl rounded-tl-sm px-6 py-4 shadow-xl backdrop-blur-md flex gap-2 items-center">
+                    <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+                    <div class="w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce shadow-[0_0_8px_rgba(236,72,153,0.8)]" style="animation-delay: 0.15s"></div>
+                    <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce shadow-[0_0_8px_rgba(34,211,238,0.8)]" style="animation-delay: 0.3s"></div>
+                </div>`;
+            chatBox.appendChild(wrapper);
+            chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+            return id;
+        }
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+    </script>
 </body>
-          </html>
-          
+</html>
