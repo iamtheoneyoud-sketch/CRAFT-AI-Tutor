@@ -1,124 +1,68 @@
-const messagesEl = document.getElementById('messages');
-const form = document.getElementById('chatForm');
-const input = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
-const newChatBtn = document.getElementById('newChat');
-const welcome = document.getElementById('welcome');
-const statusPill = document.getElementById('statusPill');
-const menuBtn = document.getElementById('menuBtn');
-const sidebar = document.getElementById('sidebar');
+const API_URL = "https://craft-ai-tutor.onrender.com/api/chat";
 
-let history = [];
-let busy = false;
+async function sendMessage() {
+    const inputField = document.getElementById('user-input');
+    const chatBox = document.getElementById('chat-box');
+    const providerSelect = document.getElementById('model-selector');
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
+    const message = inputField.value.trim();
+    const provider = providerSelect ? providerSelect.value : 'gemini';
 
-function addMessage(role, text, meta = '') {
-  const item = document.createElement('article');
-  item.className = `message ${role}`;
-  item.innerHTML = `
-    <div class="avatar">${role === 'assistant' ? 'C' : 'You'}</div>
-    <div class="message-body">
-      <div class="message-meta">${role === 'assistant' ? 'CRAFT' : 'YOU'}${meta ? ` · ${escapeHtml(meta)}` : ''}</div>
-      <div class="message-text">${escapeHtml(text).replaceAll('\n', '<br>')}</div>
-    </div>`;
-  messagesEl.appendChild(item);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-}
+    if (!message) return;
 
-function setBusy(value) {
-  busy = value;
-  sendBtn.disabled = value;
-  sendBtn.textContent = value ? 'Thinking…' : 'Send ↗';
-  input.disabled = value;
-}
+    chatBox.innerHTML += `
+        <div class="message user-message" style="margin-bottom: 10px; color: blue;">
+            <b>Aap:</b> ${message}
+        </div>
+    `;
+    
+    inputField.value = ""; 
 
-async function checkHealth() {
-  try {
-    const response = await fetch('/api/health');
-    const data = await response.json();
-    if (data.aiConfigured) {
-      statusPill.textContent = 'AI ready';
-      statusPill.classList.add('ready');
-    } else {
-      statusPill.textContent = 'Add API key';
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+                message: message, 
+                provider: provider 
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.reply) {
+            chatBox.innerHTML += `
+                <div class="message ai-message" style="margin-bottom: 10px; color: green;">
+                    <b>CRAFT Tutor:</b> ${data.reply}
+                </div>
+            `;
+        } else if (data.error) {
+            chatBox.innerHTML += `
+                <div class="message error-message" style="margin-bottom: 10px; color: red;">
+                    <b>Qi Blocked (Error):</b> ${data.error}
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error("API Fetch Error:", error);
+        chatBox.innerHTML += `
+            <div class="message error-message" style="margin-bottom: 10px; color: red;">
+                <b>System Error:</b> Server se connection toot gaya. Apna Internet check karein!
+            </div>
+        `;
     }
-  } catch {
-    statusPill.textContent = 'Server offline';
-  }
 }
 
-async function sendMessage(text) {
-  if (!text.trim() || busy) return;
-
-  const userText = text.trim();
-  welcome?.classList.add('hidden');
-  addMessage('user', userText);
-  history.push({ role: 'user', content: userText });
-  input.value = '';
-  input.style.height = 'auto';
-  setBusy(true);
-
-  try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: history.slice(-12) })
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Request failed');
-    addMessage('assistant', data.reply, data.model || 'AI');
-    history.push({ role: 'assistant', content: data.reply });
-  } catch (error) {
-    addMessage('assistant', `Connection note: ${error.message}`);
-  } finally {
-    setBusy(false);
-    input.focus();
-  }
-}
-
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  sendMessage(input.value);
+document.addEventListener("DOMContentLoaded", () => {
+    const inputField = document.getElementById('user-input');
+    if (inputField) {
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    }
 });
-
-input.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault();
-    form.requestSubmit();
-  }
-});
-
-input.addEventListener('input', () => {
-  input.style.height = 'auto';
-  input.style.height = `${Math.min(input.scrollHeight, 180)}px`;
-});
-
-document.querySelectorAll('[data-prompt]').forEach((button) => {
-  button.addEventListener('click', () => sendMessage(button.dataset.prompt));
-});
-
-newChatBtn.addEventListener('click', () => {
-  history = [];
-  messagesEl.innerHTML = '';
-  welcome?.classList.remove('hidden');
-  input.value = '';
-  input.focus();
-  sidebar.classList.remove('open');
-});
-
-menuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
-}
-
-checkHealth();
-input.focus();
